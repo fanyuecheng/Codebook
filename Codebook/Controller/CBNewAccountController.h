@@ -1,0 +1,19 @@
+//
+//  CBNewAccountController.h
+//  Codebook
+//
+//  Created by YueCheng on 2021/1/8.
+//
+
+#import "CBTableViewController.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@class CBCodeObject;
+@interface CBNewAccountController : CBTableViewController
+
+- (instancetype)initWithObject:(CBCodeObject *)object;
+
+@end
+
+NS_ASSUME_NONNULL_END
