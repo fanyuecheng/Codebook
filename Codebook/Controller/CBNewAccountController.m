@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) CBCodeObject *originalObject;
 @property (nonatomic, strong) CBCodeObject *codeObject;
+@property (nonatomic, strong) UIScrollView *accountAccessoryView;
 
 @end
 
@@ -60,7 +61,11 @@
 
 - (void)tayeAction:(UISegmentedControl *)sender {
     self.codeObject.type = sender.selectedSegmentIndex;
-    
+}
+
+- (void)accountAction:(UIButton *)sender {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    ((UITextField *)[cell.contentView viewWithTag:1000]).text = sender.currentTitle;
 }
 
 #pragma mark - UITextFieldDelegate
@@ -94,18 +99,30 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifer];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifer];
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(20 + 52 + 10, 0, CGRectGetWidth(tableView.bounds) - 20 - 52 - 10 - 15, CGRectGetHeight(cell.bounds))];
+        cell.separatorInset = UIEdgeInsetsMake(0, 15, 0, 15);
+    }
+    
+    UITextField *textField = [cell.contentView viewWithTag:1000];
+    if (!textField) {
+        textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 0, CGRectGetWidth(tableView.bounds) - 30, CGRectGetHeight(cell.bounds))];
         textField.tag = 1000;
         textField.delegate = self;
+        UILabel *leftView = [[UILabel alloc] init];
+        textField.leftViewMode = UITextFieldViewModeAlways;
+        textField.leftView = leftView;
         [cell.contentView addSubview:textField];
     }
+    
+    [cell.contentView addSubview:textField];
 
     NSString *title = nil;
     NSString *detail = nil;
+    UIView *accountAccessoryView = nil;
     switch (indexPath.row) {
         case 0:
             title = @"账号：";
             detail = self.codeObject.account;
+            accountAccessoryView = self.accountAccessoryView;
             break;
         case 1:
             title = @"密码：";
@@ -118,8 +135,10 @@
         default:
             break;
     }
-    cell.textLabel.text = title;
-    ((UITextField *)[cell viewWithTag:1000]).text = detail;
+    ((UILabel *)textField.leftView).text = title;
+    [textField.leftView sizeToFit];
+    textField.text = detail;
+    textField.inputAccessoryView = accountAccessoryView;
       
     return cell;
 }
@@ -141,6 +160,37 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - Method
+- (UIScrollView *)accountAccessoryView {
+    if (!_accountAccessoryView) {
+        NSArray *accounts = [CBCodeObject commonAccounts];
+        
+        if (accounts.count) {
+            _accountAccessoryView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 44)];
+            _accountAccessoryView.showsHorizontalScrollIndicator = NO;
+            _accountAccessoryView.backgroundColor = [UIColor whiteColor];
+            
+            __block UIButton *lastButton = nil;
+            [accounts enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                UIButton *button = [[UIButton alloc] init];
+                button.layer.cornerRadius = 4;
+                button.layer.masksToBounds = YES;
+                button.titleLabel.font = [UIFont systemFontOfSize:14];
+                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [button setTitle:obj forState:UIControlStateNormal];
+                button.backgroundColor = [UIColor systemGray6Color];
+                [button addTarget:self action:@selector(accountAction:) forControlEvents:UIControlEventTouchUpInside];
+                [button sizeToFit];
+                [_accountAccessoryView addSubview:button];
+                button.frame = CGRectMake(lastButton ? CGRectGetMaxX(lastButton.frame) + 10 : 15, (44 - CGRectGetHeight(button.bounds)) * 0.5, CGRectGetWidth(button.bounds) + 10, CGRectGetHeight(button.bounds));
+                lastButton = button;
+            }];
+            _accountAccessoryView.contentSize = CGSizeMake(CGRectGetMaxX(lastButton.frame) + 15, 0);
+        }
+    }
+    return _accountAccessoryView;
 }
 
 #pragma mark - Get

@@ -134,6 +134,30 @@ NSString *const CBKeychainService = @"com.fancy.codebook.service";
     }
 }
 
++ (NSArray <NSString *>*)commonAccounts {
+    NSArray <CBCodeObject *> *allObjects = [CBCodeObject allObjects];
+    NSMutableDictionary *accountDict = [NSMutableDictionary dictionary];
+    
+    [allObjects enumerateObjectsUsingBlock:^(CBCodeObject * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger count = [[accountDict objectForKey:obj.account] integerValue];
+        if (count) {
+            count ++;
+            [accountDict setObject:@(count) forKey:obj.account];
+        } else {
+            [accountDict setObject:@(1) forKey:obj.account];
+        }
+    }];
+    
+    [accountDict.allKeys enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger count = [[accountDict objectForKey:obj] integerValue];
+        if (count < 3) {
+            [accountDict removeObjectForKey:obj];
+        }
+    }];
+    
+    return [accountDict allKeys];
+}
+
 + (NSString *)savePasswordListToLocal {
     NSArray *objectArray = [CBCodeObject allDictionarys];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:objectArray options:0 error:NULL];

@@ -43,6 +43,7 @@ typedef NS_ENUM(NSUInteger, CBCodeObjectType) {
 + (NSArray <CBCodeObject *>*)allBankObjects;
 + (NSArray <CBCodeObject *>*)allOtherObjects;
 
++ (NSArray <NSString *>*)commonAccounts;
 + (NSString *)savePasswordListToLocal;
 + (BOOL)saveAllData:(NSArray *)data;
 - (NSDictionary *)dictionaryValue;
