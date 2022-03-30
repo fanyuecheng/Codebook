@@ -54,7 +54,7 @@
     if (!_authenticateButton) {
         _authenticateButton = [[UIButton alloc] init];
         [_authenticateButton setTitle:@"开始验证" forState:UIControlStateNormal];
-        [_authenticateButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_authenticateButton setTitleColor:[UIColor labelColor] forState:UIControlStateNormal];
         [_authenticateButton addTarget:self action:@selector(authenticateAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _authenticateButton;

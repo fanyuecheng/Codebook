@@ -39,7 +39,7 @@ performActionForShortcutItem:(nonnull UIApplicationShortcutItem *)shortcutItem
 - (UIWindow *)window {
     if (!_window) {
         _window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        _window.backgroundColor = [UIColor whiteColor];
+        _window.backgroundColor = [UIColor systemBackgroundColor];
         _window.rootViewController = [[CBNavigationController alloc] initWithRootViewController:self.mainViewController];
     }
     return _window;

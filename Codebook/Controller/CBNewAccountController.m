@@ -145,7 +145,7 @@
  
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.bounds), 50)];
-    header.backgroundColor = [UIColor whiteColor];
+    header.backgroundColor = [UIColor systemBackgroundColor];
     UISegmentedControl *control = [[UISegmentedControl alloc] initWithItems:@[@"App", @"网站", @"银行卡", @"其他"]];
     control.selectedSegmentIndex = self.codeObject.type;
     control.frame = CGRectMake(15, 10, CGRectGetWidth(tableView.bounds) - 30, 30);
@@ -170,7 +170,7 @@
         if (accounts.count) {
             _accountAccessoryView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 44)];
             _accountAccessoryView.showsHorizontalScrollIndicator = NO;
-            _accountAccessoryView.backgroundColor = [UIColor whiteColor];
+            _accountAccessoryView.backgroundColor = [UIColor systemBackgroundColor];
             
             __block UIButton *lastButton = nil;
             [accounts enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
